@@ -7,7 +7,7 @@ import { getAllUsers } from './controllers/userController';
 
 const router = Router();
 
-router.post('/auth/login', login);
+router.post('/login', login);
 router.get('/users', getAllUsers);
 
 router.get('/tasks', getAllTasks);

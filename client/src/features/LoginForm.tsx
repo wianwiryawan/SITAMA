@@ -64,7 +64,7 @@ export default function LoginForm({ onLogin }: Props) {
             disabled={isLoading}
             className={`${mainStyles.button} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isLoading ? "Memproses..." : "Login"}
+            {isLoading ? "Loading..." : "Login"}
           </button>
         </form>
         <p className={mainStyles.footer}>SIAK Access Only</p>

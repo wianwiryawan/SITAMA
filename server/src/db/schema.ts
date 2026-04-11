@@ -1,10 +1,10 @@
-import { pgTable, serial, text, varchar, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, varchar, integer, timestamp, pgEnum, date } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// Enum untuk Status dan Priority (Sesuai kebutuhan SITAMA)
 export const statusEnum = pgEnum('status', ['todo', 'doing', 'done']);
 export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high']);
 export const roleEnum = pgEnum('role', ['staff', 'ketua', 'pimpinan']);
+export const typeEnum = pgEnum('type', ['rapat', 'perdin']);
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -24,14 +24,23 @@ export const tasks = pgTable('tasks', {
   updatedAt: timestamp('updatedAt').defaultNow(),
 });
 
-// Tabel Jembatan Many-to-Many
+export const events = pgTable('events', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  startDate: date('start_date').notNull(), // Format: YYYY-MM-DD
+  endDate: date('end_date').notNull(),
+  startTime: text('start_time').notNull(), // Format: HH:mm
+  endTime: text('end_time').notNull(),
+  location: text('location'),
+  type: typeEnum('type').default('rapat'),
+});
+
 export const taskAssignments = pgTable('task_assignments', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
   taskId: integer('task_id').references(() => tasks.id, { onDelete: 'cascade' }),
 });
 
-// Relasi agar Query jadi gampang (Tanpa Join manual yang ribet)
 export const usersRelations = relations(users, ({ many }) => ({
   assignments: many(taskAssignments),
 }));
@@ -39,3 +48,9 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const tasksRelations = relations(tasks, ({ many }) => ({
   assignees: many(taskAssignments),
 }));
+
+export const eventParticipants = pgTable('event_participants', {
+  id: serial('id').primaryKey(),
+  eventId: integer('event_id').references(() => events.id, { onDelete: 'cascade' }),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+});

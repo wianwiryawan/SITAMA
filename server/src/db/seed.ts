@@ -1,15 +1,16 @@
 import { db } from './index';
-import { users, tasks, taskAssignments } from './schema';
+import { users, tasks, taskAssignments, events, eventParticipants } from './schema';
 import bcrypt from 'bcrypt';
 
 async function main() {
 
   try {
-
     console.log('Membersihkan data lama kalau ada');
     await db.delete(taskAssignments);
+    await db.delete(eventParticipants);
     await db.delete(tasks);
     await db.delete(users);
+    await db.delete(events);
 
     const hashedPassword = await bcrypt.hash('siak', 10);
 
@@ -64,6 +65,40 @@ async function main() {
       { userId: staff2Id, taskId: task2Id },
     ]);
 
+    const insertedEvents = await db
+      .insert(events)
+      .values([
+        {
+          title: 'Rapat Tim',
+          startDate: '2026-04-15',
+          endDate: '2026-04-15',
+          startTime: '09:00',
+          endTime: '11:00',
+          location: 'Ruang Rapat A',
+          type: 'rapat',
+        },
+        {
+          title: 'Workshop',
+          startDate: '2026-04-16',
+          endDate: '2026-04-18',
+          startTime: '13:00',
+          endTime: '16:00',
+          location: 'Bandung',
+          type: 'perdin',
+        },
+      ])
+      .returning();
+
+      const event1Id = insertedEvents[0].id;
+      const event2Id = insertedEvents[1].id;
+
+      await db.insert(eventParticipants).values([
+      { userId: staff3Id, eventId: event1Id },
+      { userId: staff1Id, eventId: event1Id },
+      { userId: staff2Id, eventId: event2Id },
+    ]);
+
+  console.log('Seeding berhasil');
   } catch (error) {
     console.error('Seeding gagal:', error);
   } finally {

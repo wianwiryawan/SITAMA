@@ -2,7 +2,7 @@ import { useState } from "react";
 import LoginForm from "./features/LoginForm";
 import Navbar from "./components/layout/Navbar";
 import TodoList from "./pages/ToDoList";
-import Calendar from "./pages/Calendar";
+import Calendar from "./features/calendar/calendar";
 import Dashboard from "./pages/Dashboard";
 import type { User } from "./types/types";
 

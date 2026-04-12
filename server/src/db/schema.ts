@@ -54,3 +54,18 @@ export const eventParticipants = pgTable('event_participants', {
   eventId: integer('event_id').references(() => events.id, { onDelete: 'cascade' }),
   userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
 });
+
+export const eventsRelations = relations(events, ({ many }) => ({
+  participants: many(eventParticipants),
+}));
+
+export const eventParticipantsRelations = relations(eventParticipants, ({ one }) => ({
+  event: one(events, {
+    fields: [eventParticipants.eventId],
+    references: [events.id],
+  }),
+  user: one(users, {
+    fields: [eventParticipants.userId],
+    references: [users.id],
+  }),
+}));

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import React from "react";
-import type { IEvent } from "../../pages/Calendar"; // Pastikan interface IEvent di-export di file utama
+import type { IEvent } from "./useCalendar"; 
 
 interface AgendaListProps {
 // State untuk filter

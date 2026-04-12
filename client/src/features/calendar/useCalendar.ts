@@ -179,9 +179,9 @@ export function useCalendar(currentUser: any) {
       } else {
         await createEvent(eventData);
       }
+      await fetchEventsData();
       setIsModalOpen(false);
       setShowToast(true);
-      fetchEventsData();
       setTimeout(() => setShowToast(false), 3000);
     } catch (err: any) {
       alert(err.response?.data?.message || "Gagal simpan");
@@ -189,18 +189,23 @@ export function useCalendar(currentUser: any) {
   };
 
   const handleDelete = async () => {
-    if (!selectedEvent) return;
-    if (window.confirm("Hapus agenda ini?")) {
-      try {
-        await deleteEvent(selectedEvent.id);
-        setIsModalOpen(false);
-        fetchEventsData();
-      } catch (err) {
-        alert("Gagal menghapus");
-        console.log("handle delete error",err);
-      }
+  if (!selectedEvent) return;
+
+  const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus agenda "${selectedEvent.title}"?`);
+  
+  if (confirmDelete) {
+    try {
+      await deleteEvent(selectedEvent.id);
+      setIsModalOpen(false);
+      fetchEventsData();
+      
+      alert("Agenda berhasil dihapus"); 
+    } catch (err) {
+      console.error("Gagal menghapus:", err);
+      alert("Gagal menghapus agenda");
     }
-  };
+  }
+};
 
   return {
     // Data & Logic

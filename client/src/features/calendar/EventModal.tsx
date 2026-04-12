@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import type { IEvent } from "../../pages/Calendar"; // Pastikan interface IEvent di-export di file utama
+import type { IEvent } from "./useCalendar"; // Pastikan interface IEvent di-export di file utama
 
 interface EventModalProps {
   isOpen: boolean;
@@ -30,7 +30,7 @@ export default function EventModal({
   onClose,
   selectedEvent,
   prefilledDate,
-  canEdit,
+  // canEdit,
   handleSave,
   handleDelete,
   allUsers,
@@ -56,7 +56,7 @@ export default function EventModal({
           <h2 className="text-3xl font-black italic uppercase tracking-tighter">
             {selectedEvent ? "Edit Agenda" : "Agenda Baru"}
           </h2>
-          {selectedEvent && canEdit && (
+          {selectedEvent && (
             <button
               type="button"
               onClick={handleDelete}
@@ -71,9 +71,6 @@ export default function EventModal({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Form Input */}
           <div className="space-y-4">
-            <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-2 block">
-              Informasi Utama
-            </label>
 
             <select
               name="type"
@@ -202,6 +199,7 @@ export default function EventModal({
             </div>
           </div>
         </div>
+        
 
         {/* Footer Buttons */}
         <div className="flex gap-6 mt-12">

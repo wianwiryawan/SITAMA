@@ -15,15 +15,6 @@ export const users = pgTable('users', {
   updatedAt: timestamp('updatedAt').defaultNow(),
 });
 
-export const tasks = pgTable('tasks', {
-  id: serial('id').primaryKey(),
-  title: text('title').notNull(),
-  status: statusEnum('status').default('todo'),
-  priority: priorityEnum('priority').default('medium'),
-  createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow(),
-});
-
 export const events = pgTable('events', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
@@ -33,6 +24,15 @@ export const events = pgTable('events', {
   endTime: text('end_time').notNull(),
   location: text('location'),
   type: typeEnum('type').default('rapat'),
+});
+
+export const tasks = pgTable('tasks', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  status: statusEnum('status').default('todo'),
+  priority: priorityEnum('priority').default('medium'),
+  createdAt: timestamp('createdAt').defaultNow(),
+  updatedAt: timestamp('updatedAt').defaultNow(),
 });
 
 export const taskAssignments = pgTable('task_assignments', {
@@ -47,6 +47,17 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const tasksRelations = relations(tasks, ({ many }) => ({
   assignees: many(taskAssignments),
+}));
+
+export const taskAssignmentsRelations = relations(taskAssignments, ({ one }) => ({
+  user: one(users, {
+    fields: [taskAssignments.userId],
+    references: [users.id],
+  }),
+  task: one(tasks, {
+    fields: [taskAssignments.taskId],
+    references: [tasks.id],
+  }),
 }));
 
 export const eventParticipants = pgTable('event_participants', {

@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     app.listen(PORT, () => {
-      console.log(`Server SITAMA jalan di port ${PORT}`);
+      console.log(`Server SITAMA berjalan di port ${PORT}`);
     });
   } catch (error) {
     console.error('Gagal menyalakan server SITAMA:', error);

@@ -1,17 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from './axios';
 
-export const loginUser = async (credentials: any) => {
+interface User {
+  username: string;
+  role: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+export const loginUser = async (
+  credentials: { username: string; password: string }
+): Promise<LoginResponse> => {
   const response = await api.post('/login', credentials);
-  
+
   if (response.data.token) {
     localStorage.setItem('token', response.data.token);
   }
-  
-  return response.data; 
-};
 
-export const logoutUser = () => {
-  localStorage.removeItem('token');
-  window.location.href = '/login';
+  return response.data;
 };

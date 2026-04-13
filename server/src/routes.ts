@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { login } from './controllers/authController';
-import { getAllTasks } from './controllers/taskController';
-import { getAllEvents, createEvent, updateEvent, deleteEvent } from './controllers/eventController';
+import { taskController } from './controllers/taskController';
+import { eventController } from './controllers/eventController';
 import { getAllUsers } from './controllers/userController';
 // import { authenticateToken } from '../middleware/auth';
 
@@ -10,13 +10,14 @@ const router = Router();
 router.post('/login', login);
 router.get('/users', getAllUsers);
 
-router.get('/tasks', getAllTasks);
-// router.post('/tasks', createTask);
-// router.put('/tasks/:id', updateTaskStatus);
+router.get('/tasks', taskController.getAllTasks);
+router.post('/tasks', taskController.createTask);
+router.put('/tasks/:id', taskController.updateTask);
+router.delete('/tasks/:id', taskController.deleteTask);
 
-router.get('/events', getAllEvents);
-router.post('/events', createEvent); 
-router.put('/events/:id', updateEvent);
-router.delete('/events/:id', deleteEvent);
+router.get('/events', eventController.getAllEvents);
+router.post('/events', eventController.createEvent); 
+router.put('/events/:id', eventController.updateEvent);
+router.delete('/events/:id', eventController.deleteEvent);
 
 export default router;

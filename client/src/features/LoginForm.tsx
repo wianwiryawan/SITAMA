@@ -29,14 +29,13 @@ export default function LoginForm({ onLogin }: Props) {
           password: passwordInput 
         }),
       });
-      console.log("ini pass"+passwordInput);
 
       const data = await response.json();
 
       if (response.ok) {
         // Simpan Token JWT ke LocalStorage
         localStorage.setItem('token', data.token);
-        console.log("token jwt", data.token);
+        console.log("cek role", data.user.role);
 
         // Kirim data user ke State Utama 
         onLogin(data.user); 

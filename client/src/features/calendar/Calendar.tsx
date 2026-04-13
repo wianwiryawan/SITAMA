@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCalendar } from "./useCalendar";
-import EventModal from "./eventModal";
-import AgendaList from "./agendaList";
+import EventModal from "./EventModal";
+import AgendaList from "./AgendaList";
 
 export default function Calendar({ currentUser }: { currentUser: any }) {
   // Semua data dan fungsi diambil dari custom hook ini

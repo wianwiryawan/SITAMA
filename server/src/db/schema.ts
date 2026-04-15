@@ -80,3 +80,12 @@ export const eventParticipantsRelations = relations(eventParticipants, ({ one })
     references: [users.id],
   }),
 }));
+
+export const activityLogs = pgTable('activity_logs', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull(),
+  action: text('action').notNull(),
+  feature: text('feature').notNull(),
+  targetName: text('target_name').notNull(),
+  timestamp: timestamp('timestamp').defaultNow(),
+});

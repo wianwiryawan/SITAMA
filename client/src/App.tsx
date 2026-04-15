@@ -1,10 +1,10 @@
 import { useState } from "react";
 import LoginForm from "./features/LoginForm";
 import Navbar from "./components/layout/Navbar";
-import TodoList from "./pages/ToDoList";
-import Calendar from "./features/calendar/Calendar";
+import TodoList from "./features/task/TaskManagement";
+import Calendar from "./features/event/Calendar";
 import Dashboard from "./pages/Dashboard";
-import type { User } from "./types/types";
+import type { User } from "./types/user";
 
 
 export default function App() {

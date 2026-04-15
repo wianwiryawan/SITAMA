@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 export default function Input(props: Props) {

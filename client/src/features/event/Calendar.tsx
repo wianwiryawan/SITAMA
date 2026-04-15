@@ -4,7 +4,6 @@ import EventModal from "./EventModal";
 import AgendaList from "./AgendaList";
 
 export default function Calendar({ currentUser }: { currentUser: any }) {
-  // Semua data dan fungsi diambil dari custom hook ini
   const {
     viewDate, setViewDate,
     loading,
@@ -35,10 +34,19 @@ export default function Calendar({ currentUser }: { currentUser: any }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 animate-in fade-in duration-700">
       
-      {/* 1. SEKSI KALENDER (Kiri) */}
+      {/* KALENDER */}
       <div className="lg:col-span-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-black italic uppercase tracking-tighter">Kalender Kegiatan</h2>
+          <div>
+          <h2 className="text-3xl font-black uppercase tracking-tighter">Kalender Kegiatan</h2>
+          <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em] mt-2">
+          Sistem Informasi Tata Manajemen
+        </p>     
+        <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em]">
+         Subdit SIAK
+        </p>
+          {/* <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em] mt-2">SITAMA</p> */}
+          </div>
           <button
             onClick={() => { setSelectedEvent(null); setIsModalOpen(true); }}
             className="px-5 py-3 bg-indigo-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all"

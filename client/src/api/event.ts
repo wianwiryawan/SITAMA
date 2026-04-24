@@ -30,3 +30,10 @@ export const deleteEvent = async (id: number) => {
   const response = await api.delete(`/events/${id}`);
   return response.data;
 };
+
+export const generateST = async (eventData: IEventData) => {
+  const response = await api.post('/generate-st', eventData, {
+    responseType: 'blob', 
+  });
+  return response.data; 
+};

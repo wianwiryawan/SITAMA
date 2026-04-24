@@ -20,6 +20,7 @@ router.get('/events', eventController.getAllEvents);
 router.post('/events', eventController.createEvent); 
 router.put('/events/:id', eventController.updateEvent);
 router.delete('/events/:id', eventController.deleteEvent);
+router.post('/generate-st', eventController.generateST);
 
 router.get('/logs', LogController.getAllLogs);
 router.post('/logs', LogController.createLog); 

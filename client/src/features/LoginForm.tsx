@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import type { User } from "../types/user";
 import Input from "../components/ui/Input";
 import { mainStyles } from "../styles/theme";
+import { loginUser } from "../api/auth";
 
 interface Props {
   onLogin: (user: User) => void;
@@ -12,43 +14,32 @@ export default function LoginForm({ onLogin }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
 
-    const fd = new FormData(e.currentTarget);
-    const usernameInput = fd.get('name') as string;
-    const passwordInput = fd.get('pass') as string;
+  const fd = new FormData(e.currentTarget);
+  const usernameInput = fd.get('name') as string;
+  const passwordInput = fd.get('pass') as string;
 
-    try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          username: usernameInput,
-          password: passwordInput 
-        }),
-      });
+  try {
+    const data = await loginUser({ 
+      username: usernameInput, 
+      password: passwordInput 
+    });
 
-      const data = await response.json();
+    console.log("cek role", data.user.role);
 
-      if (response.ok) {
-        // Simpan Token JWT ke LocalStorage
-        localStorage.setItem('token', data.token);
-        console.log("cek role", data.user.role);
+    onLogin(data.user); 
 
-        // Kirim data user ke State Utama 
-        onLogin(data.user); 
-      } else {
-        setError(data.message || "Username atau Password salah");
-      }
-    } catch (err) {
-      setError("Gagal terhubung ke server backend");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (err: any) {
+    const message = err.response?.data?.message || "Gagal terhubung ke server";
+    setError(message);
+    console.error("Login Error:", err);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className={mainStyles.container}>

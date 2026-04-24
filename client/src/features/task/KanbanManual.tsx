@@ -8,13 +8,21 @@ import { useActivityLog } from "../log/useActivityLog";
 import {  updateTask } from "../../api/task";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export default function KanbanManual({ closestCorners, currentUser, filterMode, setSelectedTask }: any, fetchTasks: () => void) {
 
+type KanbanManualProps = {
+  closestCorners: any;
+  currentUser: any;
+  filterMode: "all" | "mine";
+  setSelectedTask: (task: any) => void;
+  fetchTasks: () => void;
+};
+
+export default function KanbanManual({ closestCorners,currentUser, filterMode, setSelectedTask, fetchTasks,}: KanbanManualProps) {
     // const [filterMode, setFilterMode] = useState<'all' | 'mine'>('all');
     const { tasks, setTasks } = useTasks();
     const role = currentUser.role;
-    const isPimpinan = role === 'pimpinan';
-    const filteredTasks = (!isPimpinan && filterMode === 'mine')
+    const iskasubdit = role === 'kasubdit';
+    const filteredTasks = (!iskasubdit && filterMode === 'mine')
     ? tasks.filter(t => t.assignee === currentUser.username)
     : tasks;
 
@@ -25,7 +33,7 @@ export default function KanbanManual({ closestCorners, currentUser, filterMode, 
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id && !isPimpinan) {
+    if (over && active.id !== over.id && !iskasubdit) {
       setTasks((items) => {
         const oldIdx = items.findIndex(t => t.id === active.id);
         const newIdx = items.findIndex(t => t.id === over.id);
@@ -37,7 +45,7 @@ export default function KanbanManual({ closestCorners, currentUser, filterMode, 
   const { saveLog } = useActivityLog(currentUser);
   const handleDragOver = async (event: DragOverEvent) => {
     const { active, over } = event;
-    if (!over || isPimpinan) return;
+    if (!over || iskasubdit) return;
     
     const activeTask = tasks.find(t => t.id === active.id);
     if (!activeTask) return;

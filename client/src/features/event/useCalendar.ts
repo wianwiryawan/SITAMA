@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { getAllEvents, createEvent, updateEvent, deleteEvent } from "../../api/event";
 import { getAllUsers } from "../../api/user";
+import api from "../../api/axios";
 
 export interface IEvent {
   id: number;
@@ -17,6 +19,8 @@ export interface IEvent {
 }
 
 export function useCalendar(currentUser: any) {
+  const formRef = useRef<HTMLFormElement>(null);
+  
   // state utama
   const [viewDate, setViewDate] = useState(new Date());
   const [events, setEvents] = useState<IEvent[]>([]);
@@ -29,6 +33,9 @@ export function useCalendar(currentUser: any) {
   const [prefilledDate, setPrefilledDate] = useState("");
   const [selectedParticipantIds, setSelectedParticipantIds] = useState<number[]>([]);
   const [customParticipants, setCustomParticipants] = useState<string[]>([]);
+  const [isPemberiModalOpen, setIsPemberiModalOpen] = useState(false);
+  const [selectedPemberiId, setSelectedPemberiId] = useState<number | "">("");
+  const [isGenerating, setIsGenerating] = useState(false); // Untuk loading state
   
   // state UI lainnya
   const [showMineOnly, setShowMineOnly] = useState(false);
@@ -36,7 +43,8 @@ export function useCalendar(currentUser: any) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showToast, setShowToast] = useState(false);
 
-  const canEdit = currentUser?.role === 'ketua' || currentUser?.role === 'pimpinan';
+
+  const canEdit = currentUser?.role === 'katim' || currentUser?.role === 'kasubdit';
 
   // fetch data
   const fetchEventsData = async () => {
@@ -182,7 +190,7 @@ export function useCalendar(currentUser: any) {
       await fetchEventsData();
       setIsModalOpen(false);
       setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      setTimeout(() => setShowToast(false), 10000);
     } catch (err: any) {
       alert(err.response?.data?.message || "Gagal simpan");
     }
@@ -205,9 +213,80 @@ export function useCalendar(currentUser: any) {
       alert("Gagal menghapus agenda");
     }
   }
-};
+  };
+
+  const handleOpenGenerateST = (e: React.MouseEvent) => {
+    console.log("modal kecil terbuka")
+    e.preventDefault();
+    
+    if (!formRef.current) return;
+    const formData = new FormData(formRef.current);
+    
+    const title = formData.get('title');
+    const startDate = formData.get('startDate');
+
+    if (!title || !startDate) {
+      alert("Lengkapi Judul dan Tanggal Agenda terlebih dahulu.");
+      return;
+    }
+    setIsPemberiModalOpen(true);
+  };
+
+  const handleGenerateST = async () => {
+    if (!formRef.current || !selectedPemberiId) return;
+    
+    const formData = new FormData(formRef.current);
+    setIsGenerating(true);
+    
+    try {
+      const pelaksanaData = allUsers
+        .filter(u => selectedParticipantIds.includes(u.id))
+        .map(u => ({ 
+          name: u.name,
+          nip: u.nip,
+          pangkat: u.pangkat,
+          role: u.role,
+        }));
+
+      customParticipants.forEach(name => {
+        pelaksanaData.push({ username: name, nip: '-', pangkat: '-', role: 'Eksternal' } as any);
+      });
+
+      const payload = {
+        title: formData.get('title'),
+        location: formData.get('location'),
+        startDate: formData.get('startDate'),
+        endDate: formData.get('endDate'),
+        pelaksanaId: selectedParticipantIds,
+        pelaksana: pelaksanaData,
+        pemberiTugasId: Number(selectedPemberiId),
+      };
+
+      const response = await api.post('/generate-st', payload, {
+        responseType: 'blob', 
+      });
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Surat_Tugas_${String(payload.title).replace(/\s+/g, '_')}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      setIsPemberiModalOpen(false);
+    } catch (error) {
+      console.error("Gagal Generate ST:", error);
+      alert("Gagal membuat PDF. Cek koneksi server.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return {
+    formRef,
     // Data & Logic
     viewDate, setViewDate,
     events, loading,
@@ -229,6 +308,9 @@ export function useCalendar(currentUser: any) {
     customParticipants, setCustomParticipants,
     isDropdownOpen, setIsDropdownOpen,
     searchTerm, setSearchTerm,
+    isPemberiModalOpen, setIsPemberiModalOpen,
+    selectedPemberiId, setSelectedPemberiId,
+    isGenerating, setIsGenerating,
 
     // Functions
     handleDateClick,
@@ -237,6 +319,9 @@ export function useCalendar(currentUser: any) {
     isPastEvent,
     isTodayEvent,
     isNextEvent,
-    normalizeDate
+    normalizeDate,
+    handleGenerateST,
+    handleOpenGenerateST,
+    
   };
 }

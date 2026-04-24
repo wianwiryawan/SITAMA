@@ -10,6 +10,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
         id: users.id,
         username: users.username,
         role: users.role,
+        name: users.name,
+        nip: users.nip,
+        pangkat: users.pangkat,
+        jabatan: users.jabatan,
       })
       .from(users)
       .orderBy(asc(users.username)); 

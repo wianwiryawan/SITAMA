@@ -17,19 +17,172 @@ async function main() {
     console.log('Memasukkan data');
     const insertedUsers = await db.insert(users).values([
       { 
-        username: 'Rizka', 
+        username: 'Rizka',
+        name: 'Rizka Auliarahmi, S.Tr.Kom',
+        nip: '20001116 202504 2 004',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Pranata Komputer Ahli Pertama', 
         password: hashedPassword, 
         role: 'staff' 
       },
       { 
-        username: 'Aulia', 
+        username: 'Pak Ferdi',
+        name: 'Ferdi Firmansyah S.Kom',
+        nip: '19780704 201101 1 007',
+        pangkat: 'Penata Tk.I (III/d)',
+        jabatan: 'Pranata Komputer Ahli Muda', 
         password: hashedPassword, 
-        role: 'ketua' 
+        role: 'katim' 
       },
       { 
-        username: 'Rahmi', 
+        username: 'Pak Wahyu',
+        name: 'Wahyu Widayat, M.T., CPSp',
+        nip: '19750603 200801 1 001',
+        pangkat: 'Pembina Tk.I (IV/b)',
+        jabatan: 'Kepala Subdirektorat Sistem Informasi Administrasi Kependudukan', 
         password: hashedPassword, 
-        role: 'pimpinan' 
+        role: 'kasubdit' 
+      },
+      { 
+        username: 'Mba Utik',
+        name: 'Utik Ananingsih, SE, MM',
+        nip: '19830905 200801 2 001',
+        pangkat: 'Penata (III/c)',
+        jabatan: 'Penata Kelola Pemerintahan', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mba Indra',
+        name: 'Indra Lestari, A.Md ',
+        nip: '19901025 202012 2 017',
+        pangkat: 'Pengatur (II/c)',
+        jabatan: 'Pengelola Layanan Pengadaan', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Rangga',
+        name: 'Rangga Prasetyo Ridwan, Y.W., S.Kom',
+        nip: '19950613 202012 1 005',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Pranata Komputer Ahli Pratama', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Awang',
+        name: 'Awang Brilian Brantas, S. Kom',
+        nip: '19940930 202012 1 010',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Pranata Komputer Ahli Pratama', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Puspa',
+        name: 'Luh Nyoman Puspakha Majestie Sukma, S.Tr.I.P ',
+        nip: '20020916 202409 2 001',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Penata Kelola Pemerintahan', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Kak Dewi',
+        name: 'Wahab Dewi Sinaga, S Kom',
+        nip: '19940620 202521 2 020',
+        pangkat: 'PPPK',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Usep',
+        name: 'Usep Saepuloh, S Kom',
+        nip: '19860314 202521 1 014',
+        pangkat: 'PPPK',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Dafi',
+        name: 'Rizka Khadafi, S.Kom.I',
+        nip: '19901128 202521 1 012',
+        pangkat: 'PPPK',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Ruli',
+        name: 'Muhammad Nasruli, S. Sos',
+        nip: '19870407 202521 1 019',
+        pangkat: 'PPPK',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Rizal',
+        name: 'Safrizal Fauzi',
+        nip: '19841205 202521 1 018',
+        pangkat: 'PPPK',
+        jabatan: 'Operator Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Nelson',
+        name: 'Nelson Fernando, SE',
+        nip: '19950705 202521 1 044',
+        pangkat: 'PPPK',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Mas Ridwan',
+        name: 'Ridwan Rasiman',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
+      },
+      { 
+        username: 'Mas Tirto',
+        name: 'Tirto Slamet Raharjo',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
+      },
+      { 
+        username: 'Mas Rahman',
+        name: 'Rahman Hakim',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
+      },
+      { 
+        username: 'Mas Arief',
+        name: 'Muhammad Arief Pambudi',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
+      },
+      { 
+        username: 'Mas Fajar',
+        name: 'Fajar Wahyudi',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
+      },
+      { 
+        username: 'Mas Yudo',
+        name: 'Achmad Yudo Tristanto',
+        jabatan: 'Tenaga IT Support', 
+        password: hashedPassword, 
+        role: 'tenagaahli' 
       },
     ]).returning();
 

@@ -2,7 +2,7 @@ export interface User {
   id: number;
   username: string;
   password: string;
-  role: 'Pimpinan' | 'Ketua Tim' | 'Staff';
+  role: 'kasubdit' | 'katim' | 'staff' | 'tenagaahli';
 }
 
 export interface Task {

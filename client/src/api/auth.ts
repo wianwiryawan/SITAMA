@@ -1,9 +1,5 @@
+import type { User } from '../types/user';
 import api from './axios';
-
-interface User {
-  username: string;
-  role: string;
-}
 
 interface LoginResponse {
   token: string;

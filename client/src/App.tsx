@@ -3,7 +3,7 @@ import LoginForm from "./features/LoginForm";
 import Navbar from "./components/layout/Navbar";
 import TodoList from "./features/task/TaskManagement";
 import Calendar from "./features/event/Calendar";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./features/Dashboard";
 import type { User } from "./types/user";
 
 

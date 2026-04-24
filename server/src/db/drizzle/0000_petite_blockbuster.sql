@@ -1,5 +1,5 @@
 CREATE TYPE "public"."priority" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
-CREATE TYPE "public"."role" AS ENUM('staff', 'ketua', 'pimpinan');--> statement-breakpoint
+CREATE TYPE "public"."role" AS ENUM('staff', 'katim', 'pimpinan');--> statement-breakpoint
 CREATE TYPE "public"."status" AS ENUM('todo', 'doing', 'done');--> statement-breakpoint
 CREATE TABLE "task_assignments" (
 	"id" serial PRIMARY KEY NOT NULL,

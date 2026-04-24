@@ -26,7 +26,12 @@ export default function Calendar({ currentUser }: { currentUser: any }) {
     handleDelete,
     isPastEvent,
     isTodayEvent,
-    isNextEvent
+    isNextEvent,
+    formRef,
+    setIsPemberiModalOpen, isPemberiModalOpen,
+    setSelectedPemberiId, selectedPemberiId,
+    setIsGenerating, isGenerating,
+    handleGenerateST, handleOpenGenerateST,
   } = useCalendar(currentUser);
 
   if (loading) return <div className="p-10 text-center font-black italic">MEMUAT DATA AGENDA...</div>;
@@ -126,7 +131,16 @@ export default function Calendar({ currentUser }: { currentUser: any }) {
         setIsDropdownOpen={setIsDropdownOpen}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-      />
+        formRef={formRef}
+        isPemberiModalOpen={isPemberiModalOpen}
+        setIsPemberiModalOpen={setIsPemberiModalOpen}
+        selectedPemberiId={selectedPemberiId}
+        setSelectedPemberiId={setSelectedPemberiId}
+        isGenerating={isGenerating}
+        setIsGenerating={setIsGenerating} 
+        executeGenerateST={handleGenerateST}
+        handleOpenGenerateST={handleOpenGenerateST}
+        />
 
       {/* Toast Notifikasi */}
       {showToast && (

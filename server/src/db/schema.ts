@@ -3,12 +3,16 @@ import { relations } from "drizzle-orm";
 
 export const statusEnum = pgEnum('status', ['todo', 'doing', 'done']);
 export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high']);
-export const roleEnum = pgEnum('role', ['staff', 'ketua', 'pimpinan']);
+export const roleEnum = pgEnum('role', ['staff', 'katim', 'kasubdit','tenagaahli']);
 export const typeEnum = pgEnum('type', ['rapat', 'perdin']);
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   username: varchar('username', { length: 255 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  nip:varchar('nip', { length: 255 }).unique(),
+  pangkat: text('pangkat'),
+  jabatan: varchar('jabatan', { length: 255 }).notNull(),
   password: text('password').notNull(),
   role: roleEnum('role').default('staff'),
   createdAt: timestamp('createdAt').defaultNow(),

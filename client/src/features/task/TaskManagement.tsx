@@ -18,19 +18,18 @@ export default function ToDoList({ currentUser }: any) {
   const [filterMode, setFilterMode] = useState<'all' | 'mine'>('all');
   
   const role = currentUser.role;
-  const canAddTask = role === 'ketua' || role === 'pimpinan';
-  const canSeeKanban = role === 'staff' || role === 'ketua';
-  // const canSeeTable = role === 'ketua' || role === 'pimpinan';
-  const isPimpinan = role === 'pimpinan';
+  const canAddTask = role === 'katim' || role === 'kasubdit' || role === 'staff' || role === 'tenagaahli';
+  const canSeeKanban = role === 'staff' || role === 'katim' || role === 'kasubdit' || role === 'tenagaahli';
+  // const canSeeTable = role === 'katim' || role === 'kasubdit';
+  const iskasubdit = role === 'kasubdit';
 
   const {
     handleAddTask,
-    handleDragEnd,
-    handleDragOver,
     handleDeleteTask,
     handleUpdateTask,
-    sensors,
   } = useTaskActions(currentUser, fetchTasks, setLogs);
+
+  
 
   if (loading) return <div>Loading...</div>;
 
@@ -53,7 +52,7 @@ export default function ToDoList({ currentUser }: any) {
         </div>
 
         <div className="flex items-center gap-4">
-          {!isPimpinan && (
+          {!iskasubdit && (
             <div className="bg-gray-100 p-1.5 rounded-2xl flex border border-gray-100">
               <button onClick={() => setFilterMode('all')} className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${filterMode === 'all' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-400'}`}>Semua Tugas</button>
               <button onClick={() => setFilterMode('mine')} className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${filterMode === 'mine' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-400'}`}>Tugas Saya</button>
@@ -69,14 +68,12 @@ export default function ToDoList({ currentUser }: any) {
 
       {canSeeKanban && (
         <KanbanManual 
-          sensors={sensors}
           closestCorners={closestCorners} 
-          handleDragOver={handleDragOver} 
-          handleDragEnd={handleDragEnd}
           currentUser={currentUser}
           filterMode={filterMode}
-          setSelectedTask={setSelectedTask} 
-          ></KanbanManual>
+          setSelectedTask={setSelectedTask}
+          fetchTasks={fetchTasks}
+          />
       )}
 
       {selectedTask && (

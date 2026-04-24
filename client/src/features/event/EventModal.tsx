@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import type { IEvent } from "./useCalendar";
+import { type IEvent } from "./useCalendar";
+import DropdownAssignee from "../../components/layout/DropdownAssignee";
 
 interface EventModalProps {
+  formRef: any
   isOpen: boolean;
   onClose: () => void;
   selectedEvent: IEvent | null;
@@ -10,6 +12,8 @@ interface EventModalProps {
   canEdit: boolean;
   handleSave: (e: React.FormEvent<HTMLFormElement>) => void;
   handleDelete: () => void;
+  executeGenerateST: () => void;
+  handleOpenGenerateST:(e: React.MouseEvent) => void;
 
   // State untuk Pelaksana
   allUsers: any[];
@@ -23,9 +27,19 @@ interface EventModalProps {
   setIsDropdownOpen: (open: boolean) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+
+  //state untuk generate ST
+  isPemberiModalOpen: boolean;
+  setIsPemberiModalOpen: (open: boolean) => void;
+  selectedPemberiId: number | "";
+  setSelectedPemberiId: React.Dispatch<React.SetStateAction<number | "">>;
+  isGenerating: boolean;
+  setIsGenerating: (open: boolean) => void;
 }
 
+
 export default function EventModal({
+  formRef,
   isOpen,
   onClose,
   selectedEvent,
@@ -42,12 +56,20 @@ export default function EventModal({
   setIsDropdownOpen,
   searchTerm,
   setSearchTerm,
+  isPemberiModalOpen,
+  setIsPemberiModalOpen,
+  selectedPemberiId,
+  setSelectedPemberiId,
+  isGenerating,
+  executeGenerateST,
+  handleOpenGenerateST,
 }: EventModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-120 flex items-center justify-center bg-gray-950/40 backdrop-blur-md p-4">
       <form
+        ref={formRef}
         onSubmit={handleSave}
         className="bg-white w-full max-w-4xl rounded-[3.5rem] p-10 shadow-2xl animate-in zoom-in duration-300"
       >
@@ -108,105 +130,79 @@ export default function EventModal({
             <input name="location" defaultValue={selectedEvent?.location} placeholder="Lokasi Kegiatan" className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-sm outline-none" />
           </div>
 
-          {/* Pelaksana */}
-          <div className="flex flex-col h-full">
-            <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-2 mb-1 block">Daftar Pelaksana</label>
-            <div className="relative">
-              <div 
-                onClick={(e) => {
-                    e.preventDefault();
-                    setIsDropdownOpen(!isDropdownOpen);
-                    }}
-                className={`w-full bg-gray-50 p-4 rounded-2xl border-2 border-transparent hover:border-indigo-100 cursor-pointer transition-all flex items-center justify-between gap-3 ${
-                  (selectedParticipantIds.length > 0 || customParticipants.length > 0) ? 'min-h-14 h-auto' : 'h-14'
-                }`}
-              >
-                <div className="flex flex-wrap gap-2 items-center flex-1">
-                  {selectedParticipantIds.length === 0 && customParticipants.length === 0 ? (
-                    <span className="text-xs text-gray-400 font-bold ml-1">Pilih Pelaksana...</span>
-                  ) : (
-                    <>
-                      {/* Daftar pelaksana */}
-                      {allUsers.filter(u => selectedParticipantIds.includes(u.id)).map(user => (
-                        <span key={user.id} className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-[9px] font-black uppercase flex items-center gap-1">
-                          {user.username}
-                          <button type="button" onClick={(e) => { e.stopPropagation(); setSelectedParticipantIds(prev => prev.filter(id => id !== user.id)); }} className="ml-1">×</button>
-                        </span>
-                      ))}
-                    </>
-                  )}
-                </div>
-                <span className={`text-[10px] transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>▼</span>
-              </div>
-
-              {/* Dropdown Logic */}
-              {isDropdownOpen && (
-                <div className="absolute z-130 left-0 right-0 mt-2 bg-white border border-gray-100 shadow-2xl rounded-[2.5rem] p-5">
-                   <input 
-                    autoFocus
-                    placeholder="Cari atau ketik nama luar..."
-                    className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none mb-4 focus:ring-2 ring-indigo-500/10"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && searchTerm.trim()) {
-                        e.preventDefault();
-                        if (!customParticipants.includes(searchTerm)) {
-                            setCustomParticipants([...customParticipants, searchTerm]);
-                            setSearchTerm("");
-                        }
-                        }
-                    }}
-                    />
-
-                    <div className="max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {allUsers
-                        .filter(u => u.username.toLowerCase().includes(searchTerm.toLowerCase()))
-                        .map((user) => {
-                        const isSelected = selectedParticipantIds.includes(user.id);
-                        return (
-                            <div 
-                            key={user.id}
-                            onClick={() => {
-                                if (isSelected) {
-                                setSelectedParticipantIds(prev => prev.filter(id => id !== user.id));
-                                } else {
-                                setSelectedParticipantIds(prev => [...prev, user.id]);
-                                }
-                            }}
-                            className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all ${isSelected ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100 text-gray-500'}`}
-                            >
-                            <div className="flex flex-col">
-                                <span className="text-xs font-bold">{user.username}</span>
-                                <span className={`text-[8px] uppercase font-black ${isSelected ? 'text-indigo-200' : 'text-gray-400'}`}>{user.role}</span>
-                            </div>
-                            {isSelected && <span className="font-bold text-sm">✓</span>}
-                            </div>
-                        );
-                        })}
-                    
-                    {searchTerm && !allUsers.some(u => u.username.toLowerCase() === searchTerm.toLowerCase()) && (
-                        <div 
-                        onClick={() => { setCustomParticipants([...customParticipants, searchTerm]); setSearchTerm(""); }}
-                        className="p-4 bg-amber-50 text-amber-700 rounded-2xl cursor-pointer text-[10px] font-black italic border-2 border-dashed border-amber-200"
-                        >
-                        + Tambah "{searchTerm}" ke Daftar Pelaksana
-                        </div>
-                    )}
-                    </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <DropdownAssignee  
+            allUsers={allUsers} 
+            selectedParticipantIds={selectedParticipantIds} 
+            setSelectedParticipantIds={setSelectedParticipantIds}
+            customParticipants={customParticipants} 
+            setCustomParticipants={setCustomParticipants} 
+            isDropdownOpen={isDropdownOpen} 
+            setIsDropdownOpen={setIsDropdownOpen} 
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm}
+          />
         </div>
         
 
         {/* Footer Buttons */}
         <div className="flex gap-6 mt-12">
           <button type="button" onClick={onClose} className="flex-1 py-5 font-black text-gray-400 uppercase text-[11px]">Batal</button>
-          <button type="submit" className="flex-1 py-5 bg-gray-950 text-white rounded-4xl font-black uppercase text-[11px] shadow-xl">Simpan Agenda</button>
+          <button ref={formRef} type="submit" className="flex-1 py-5 bg-gray-950 text-white rounded-4xl font-black uppercase text-[11px] shadow-xl">Simpan Agenda</button>
+          <button 
+            type="button" 
+            onClick={handleOpenGenerateST}
+            className="flex-1 py-5 bg-indigo-800 text-white rounded-4xl font-black uppercase text-[11px] shadow-xl hover:bg-indigo-900 transition-all"
+          >
+            Buat Surat Tugas
+          </button>
         </div>
       </form>
+
+      {isPemberiModalOpen && (
+        <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white p-8 rounded-4xl z-210 shadow-2xl w-full max-w-xs">
+            <div className="text-center mb-6">
+              <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <span className="text-xl">🖋️</span>
+              </div>
+              <h3 className="text-sm font-black uppercase tracking-tighter text-gray-800">Penandatangan</h3>
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1">Pilih Pejabat Pemberi Tugas</p>
+            </div>
+
+            <div className="space-y-3">
+              <select 
+                value={selectedPemberiId}
+                onChange={(e) => setSelectedPemberiId(Number(e.target.value))}
+                className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-xs border-2 border-transparent focus:border-indigo-500 outline-none appearance-none cursor-pointer text-center"
+              >
+                <option value="">— Pilih Nama —</option>
+                {allUsers
+                  .filter(u => u.role === 'katim' || u.role === 'kasubdit')
+                  .map(p => (
+                    <option key={p.id} value={p.id}>{p.username.toUpperCase()}</option>
+                  ))}
+              </select>
+
+              <button 
+                onClick={executeGenerateST}
+                disabled={!selectedPemberiId || isGenerating}
+                className={`w-full py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg transition-all ${
+                  isGenerating ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100'
+                }`}
+              >
+                {isGenerating ? 'Memproses PDF...' : 'Cetak Surat Tugas'}
+              </button>
+              
+              <button 
+                onClick={() => setIsPemberiModalOpen(false)}
+                className="w-full py-2 font-black text-gray-400 uppercase text-[9px] hover:text-red-500 transition-colors"
+              >
+                Kembali ke Form
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

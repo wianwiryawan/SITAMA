@@ -1,3 +1,5 @@
+import { dashboardStyles } from "../../styles/theme";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ILog {
   id: number;
@@ -13,16 +15,25 @@ interface ActivityLogProps {
   maxHeight?: string;
 }
 
+const formatDateTime = (value: string) => {
+  return new Date(value).toLocaleString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 
 export default function ActivityLog({ logs, maxHeight = "max-h-75" }: ActivityLogProps) {
     
   return (
-    <div className="bg-gray-950 rounded-[3rem] p-10 text-white shadow-2xl h-full">
+    <div className={`${dashboardStyles.logCard} rounded-[3rem] p-10 text-white shadow-2xl h-full`}>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-xl font-black italic uppercase tracking-tighter">
-          Log Aktivitas <span className="text-indigo-500">.</span>
+        <h2 className="text-xl font-black uppercase tracking-tighter">
+          Log Aktivitas <span className="text-amber-500">.</span>
         </h2>
-        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
       </div>
       
       <div className={`space-y-6 overflow-y-auto pr-2 custom-scrollbar ${maxHeight}`}>
@@ -31,19 +42,19 @@ export default function ActivityLog({ logs, maxHeight = "max-h-75" }: ActivityLo
           <div key={log.id} className="border-l-2 border-white/10 pl-4 py-1 relative">
             <div className="absolute -left-1.25 top-2 w-2 h-2 bg-indigo-500 rounded-full"></div>
             <div className="flex items-center gap-2 mb-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">
-                {log.timestamp}
+              <p className="text-[10px] font-black uppercase tracking-widest text-white">
+                {formatDateTime(log.timestamp)}
               </p>
               <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold ${
-                log.feature === 'TASK' ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300'
+                log.feature === 'TASK' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-purple-500/20 text-purple-300'
               }`}>
                 {log.feature}
                 
               </span>
             </div>
-            <p className="text-xs font-medium leading-relaxed">
+            <p className="text-sm font-medium leading-relaxed">
               <span className="font-black text-white">{log.username}</span> {log.action}{" "}
-              <span className="italic text-gray-400">"{log.targetName}"</span>
+              <span className="italic text-black">"{log.targetName}"</span>
             </p>
           </div>
         ))

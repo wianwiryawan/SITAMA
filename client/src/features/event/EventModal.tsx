@@ -97,7 +97,7 @@ export default function EventModal({
             <select
               name="type"
               defaultValue={selectedEvent?.type || "rapat"}
-              className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-xs outline-none border-2 border-transparent focus:border-indigo-100 transition-all"
+              className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-sm outline-none border-2 border-transparent focus:border-indigo-100 transition-all"
             >
               <option value="rapat">Rapat</option>
               <option value="perdin">Perjalanan Dinas</option>
@@ -114,17 +114,17 @@ export default function EventModal({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-2 mb-1 block">Mulai</label>
-                <input name="startDate" type="date" defaultValue={selectedEvent?.startDate || prefilledDate} required className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none" />
+                <input name="startDate" type="date" defaultValue={selectedEvent?.startDate || prefilledDate} required className="w-full bg-gray-50 p-4 rounded-2xl text-sm font-bold outline-none" />
               </div>
               <div>
                 <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-2 mb-1 block">Selesai</label>
-                <input name="endDate" type="date" defaultValue={selectedEvent?.endDate || prefilledDate} required className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none" />
+                <input name="endDate" type="date" defaultValue={selectedEvent?.endDate || prefilledDate} required className="w-full bg-gray-50 p-4 rounded-2xl text-sm font-bold outline-none" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <input name="startTime" type="time" defaultValue={selectedEvent?.startTime || "09:00"} className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none" />
-              <input name="endTime" type="time" defaultValue={selectedEvent?.endTime || "17:00"} className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none" />
+              <input name="startTime" type="time" defaultValue={selectedEvent?.startTime || "09:00"} className="w-full bg-gray-50 p-4 rounded-2xl text-sm font-bold outline-none" />
+              <input name="endTime" type="time" defaultValue={selectedEvent?.endTime || "17:00"} className="w-full bg-gray-50 p-4 rounded-2xl text-sm font-bold outline-none" />
             </div>
 
             <input name="location" defaultValue={selectedEvent?.location} placeholder="Lokasi Kegiatan" className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-sm outline-none" />
@@ -173,7 +173,7 @@ export default function EventModal({
               <select 
                 value={selectedPemberiId}
                 onChange={(e) => setSelectedPemberiId(Number(e.target.value))}
-                className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-xs border-2 border-transparent focus:border-indigo-500 outline-none appearance-none cursor-pointer text-center"
+                className="w-full bg-gray-50 p-4 rounded-2xl font-bold text-sm border-2 border-transparent focus:border-indigo-500 outline-none appearance-none cursor-pointer text-center"
               >
                 <option value="">— Pilih Nama —</option>
                 {allUsers

@@ -34,7 +34,7 @@ export default function ToDoList({ currentUser }: any) {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 p-6 md:p-14 antialiased selection:bg-indigo-100">
+    <div className="min-h-screen bg-[#fffcf5] text-[#521f12] p-6 md:p-14 antialiased selection:bg-indigo-100 rounded-[2.5rem]">
       {isAddModalOpen && (
         <AddTaskModal
           onClose={() => setIsAddModalOpen(false)}
@@ -48,18 +48,23 @@ export default function ToDoList({ currentUser }: any) {
       <header className="max-w-7xl mx-auto mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
         <div>
           <h2 className="text-3xl font-black uppercase tracking-tighter">Daftar Tugas</h2>
-          {/* <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em] mt-2">Manajemen Tugas</p> */}
+          <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em] mt-2">
+            Sistem Informasi Tata Manajemen
+          </p>   
+          <p className="text-gray-400 font-black uppercase text-[10px] tracking-[0.4em] mt-2">
+           Subdit SIAK
+          </p>   
         </div>
 
         <div className="flex items-center gap-4">
           {!iskasubdit && (
             <div className="bg-gray-100 p-1.5 rounded-2xl flex border border-gray-100">
-              <button onClick={() => setFilterMode('all')} className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${filterMode === 'all' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-400'}`}>Semua Tugas</button>
-              <button onClick={() => setFilterMode('mine')} className={`px-6 py-2 rounded-xl text-[9px] font-black uppercase transition-all ${filterMode === 'mine' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-400'}`}>Tugas Saya</button>
+              <button onClick={() => setFilterMode('all')} className={`px-6 py-2 rounded-xl text-xs font-black uppercase transition-all ${filterMode === 'all' ? 'bg-white shadow-sm text-amber-600' : 'text-gray-400'}`}>Semua Tugas</button>
+              <button onClick={() => setFilterMode('mine')} className={`px-6 py-2 rounded-xl text-xs font-black uppercase transition-all ${filterMode === 'mine' ? 'bg-white shadow-sm text-amber-600' : 'text-gray-400'}`}>Tugas Saya</button>
             </div>
           )}
           {canAddTask && (
-            <button onClick={() => setIsAddModalOpen(true)} className="bg-indigo-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 hover:bg-gray-950 transition-all">
+            <button onClick={() => setIsAddModalOpen(true)} className="bg-amber-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 hover:bg-gray-950 transition-all">
                 + Tambah Tugas
             </button>
            )}

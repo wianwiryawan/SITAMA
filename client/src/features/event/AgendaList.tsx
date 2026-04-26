@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import React from "react";
+import { textStyles } from "../../styles/theme";
 import type { IEvent } from "./useCalendar"; 
 
 interface AgendaListProps {
-// State untuk filter
   showMineOnly: boolean;
   setShowMineOnly: (val: boolean) => void;
-  
-  // Data dan Fungsi logic dari useCalendar
   filteredAgenda: IEvent[];
   isPastEvent: (e: IEvent) => boolean;
   isTodayEvent: (e: IEvent) => boolean;
   isNextEvent: (e: IEvent) => boolean;
-  
-  // Fungsi untuk buka detail
   onEventClick: (e: IEvent) => void;
 }
 
@@ -29,11 +24,11 @@ export default function EventModal({
   return (
     <div className="lg:col-span-4">
         <div className="flex justify-between items-center mb-4 px-2">
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400">Agenda Bulan Ini</h3>
+          <h3 className={textStyles.agendaList}>Agenda Bulan Ini</h3>
            <div className="flex items-center gap-3">
             <div className="flex bg-gray-100 p-1 rounded-2xl w-fit">
-              <button onClick={() => setShowMineOnly(false)} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase ${!showMineOnly ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-400'}`}>Semua Agenda</button>
-              <button onClick={() => setShowMineOnly(true)} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase ${showMineOnly ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-400'}`}>Agenda Saya</button>
+              <button onClick={() => setShowMineOnly(false)} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase ${!showMineOnly ? 'bg-white text-amber-600 shadow-sm' : 'text-gray-400'}`}>Semua Agenda</button>
+              <button onClick={() => setShowMineOnly(true)} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase ${showMineOnly ? 'bg-white text-amber-600 shadow-sm' : 'text-gray-400'}`}>Agenda Saya</button>
             </div>
            </div> 
         </div>
@@ -59,7 +54,6 @@ export default function EventModal({
         }`}
     >
       <div className="flex items-center gap-4">
-        {/* Garis indikator samping juga disesuaikan */}
         <div className={`w-2 h-10 rounded-full transition-all 
           ${isPast ? 'bg-gray-300' : isNext ? 'bg-emerald-500' : e.type === 'rapat' ? 'bg-indigo-600' : 'bg-amber-400'}`} 
         />
@@ -68,12 +62,11 @@ export default function EventModal({
           <div className="flex justify-between items-start">
             <h4 className={`text-[11px] font-black uppercase tracking-tight transition-colors 
               ${isNext ? 'text-emerald-700' : 'text-gray-900'} 
-              group-hover:text-indigo-600`}
+              group-hover:text-amber-600`}
             >
               {e.title}
             </h4>
             
-            {/* Badge kecil untuk penanda Next Event */}
             {isNext && (
               <span className="text-[7px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">
                 Next Up

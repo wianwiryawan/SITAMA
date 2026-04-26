@@ -5,6 +5,7 @@ import TodoList from "./features/task/TaskManagement";
 import Calendar from "./features/event/Calendar";
 import Dashboard from "./features/Dashboard";
 import type { User } from "./types/user";
+import { bgStyles } from "../src/styles/theme";
 
 
 export default function App() {
@@ -16,7 +17,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-950">
+    <div className={`${bgStyles.app} min-h-screen text-gray-950`}>
       <Navbar
         currentPage={page}
         setCurrentPage={setPage}

@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { ITask, Priority } from "../../pages/ToDoList";
+import type { ITask, Priority } from "../../types/task";
 
 interface TaskCardProps {
   task: ITask;

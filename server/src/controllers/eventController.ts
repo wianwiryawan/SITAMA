@@ -6,7 +6,9 @@ import fs from "fs";
 import path from "path";
 import Handlebars from "handlebars";
 import puppeteer from "puppeteer";
-import { formatDateRange } from './utils';
+import { calculateDuration, formatDateRange } from './utils';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
 
 Handlebars.registerHelper("inc", (value: number) => {
   return (value || 0) + 1;
@@ -216,5 +218,87 @@ export const eventController = {
   } finally {
     if (browser) await browser.close();
   }
-}
+  },
+
+  generateSPT: async (req: any, res: any) => {
+  try {
+    const { location, startDate, endDate, title, pelaksanaId, pemberiTugasId, nomorSurat } = req.body;
+
+    if (!pemberiTugasId || !pelaksanaId || pelaksanaId.length === 0) {
+      return res.status(400).json({ message: "Data surat tidak lengkap" });
+    }
+
+    const [infoPemberi] = await db.select()
+      .from(users)
+      .where(eq(users.id, pemberiTugasId))
+      .limit(1);
+
+    if (!infoPemberi) {
+      return res.status(404).json({ message: "Pemberi tugas tidak ditemukan" });
+    }
+
+    const rawPelaksana = await db.select({
+        name: users.name,
+        nip: users.nip,
+        pangkat: users.pangkat,
+        jabatan: users.jabatan,
+        role: users.role 
+      })
+      .from(users)
+      .where(inArray(users.id, pelaksanaId));
+
+    const formattedPegawai = rawPelaksana.map((p, index) => {
+      const isASN = p.role !== 'tenagaahli';
+      return {
+        name: p.name || "-",
+        nip: isASN ? (p.nip || "-") : "",
+        pangkat: isASN ? (p.pangkat || "-") : "",
+        jabatan: p.jabatan || "-",
+        no: index + 1,
+        labelKepada: index === 0 ? 'Kepada' : '',
+        titikDua: index === 0 ? ':' : '',
+        showASNInfo: isASN
+      };
+    });
+
+    const formattedDate = formatDateRange(startDate, endDate);
+    const durasiHari = calculateDuration(startDate, endDate);
+
+    const templatePath = path.resolve(__dirname, '../../templates/template_spt.docx');
+    const content = fs.readFileSync(templatePath, 'binary');
+    const zip = new PizZip(content);
+    const doc = new Docxtemplater(zip, {
+      paragraphLoop: true,
+      linebreaks: true,
+    });
+
+    doc.render({
+      lokasi: location || "-",
+      tanggal: formattedDate,
+      durasi: durasiHari,
+      agenda: title,
+      pegawai: formattedPegawai, 
+      namaPemberi: infoPemberi.name || "-",
+      nipPemberi: infoPemberi.nip || "-",
+      pangkatPemberi: infoPemberi.pangkat || "-",
+      jabatanPemberi: infoPemberi.jabatan || "-",
+    });
+
+    const buf = doc.getZip().generate({ type: 'nodebuffer', compression: 'DEFLATE' });
+    
+    const safeFileName = `SPT_${title.substring(0, 20)}.docx`.replace(/[/\\?%*:|"<> ,]/g, '_');
+
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'Content-Disposition': `attachment; filename="${safeFileName}"`,
+      'Content-Length': buf.length
+    });
+
+    return res.send(buf);
+
+  } catch (error) {
+    console.error("Error generate SPT:", error);
+    res.status(500).json({ message: "Gagal membuat dokumen SPT" });
+  }
+},
 };

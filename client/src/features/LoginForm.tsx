@@ -2,8 +2,10 @@
 import { useState } from "react";
 import type { User } from "../types/user";
 import Input from "../components/ui/Input";
-import { mainStyles } from "../styles/theme";
+// import { mainStyles } from "../styles/theme";
 import { loginUser } from "../api/auth";
+import sitamaImg from "./SITAMA.png";
+import { bgStyles } from "../styles/theme";
 
 interface Props {
   onLogin: (user: User) => void;
@@ -42,23 +44,38 @@ export default function LoginForm({ onLogin }: Props) {
 };
 
   return (
-    <div className={mainStyles.container}>
-      <div className={mainStyles.card}>
-        <h1 className={`${mainStyles.title} mb-3`}>SITAMA</h1>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <Input name="name" required placeholder="Username" disabled={isLoading} />
-          <Input name="pass" type="password" required placeholder="Password" disabled={isLoading} />
-          {error && <p className={mainStyles.error}>{error}</p>}
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className={`${mainStyles.button} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {isLoading ? "Loading..." : "Login"}
-          </button>
-        </form>
-        <p className={mainStyles.footer}>SIAK Access Only</p>
-      </div>
+    <div className={`${bgStyles.login} min-h-screen flex items-center justify-center`}>
+      <div className="w-7xl h-120 bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-3">
+    <div className="col-span-2 aspect-video">
+      <img
+        src={sitamaImg}
+        className="w-full h-full object-contain"
+      />
     </div>
+    <div className="col-span-1 flex flex-col justify-center px-8">
+      <h1 className="text-2xl font-bold mb-3">Welcome!</h1>
+
+      <form onSubmit={handleLogin} className="space-y-4">
+        <Input name="name" required placeholder="Username" disabled={isLoading} />
+        <Input name="pass" type="password" required placeholder="Password" disabled={isLoading} />
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className={`w-full py-2 rounded-lg bg-amber-500 text-white font-semibold ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {isLoading ? "Loading..." : "Login"}
+        </button>
+      </form>
+
+      {/* <p className="text-sm text-gray-400 mt-6">SIAK Access Only</p> */}
+    </div>
+
+  </div>
+</div>
   );
 }

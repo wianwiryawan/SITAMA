@@ -21,6 +21,7 @@ router.post('/events', eventController.createEvent);
 router.put('/events/:id', eventController.updateEvent);
 router.delete('/events/:id', eventController.deleteEvent);
 router.post('/generate-st', eventController.generateST);
+router.post('/generate-spt', eventController.generateSPT);
 
 router.get('/logs', LogController.getAllLogs);
 router.post('/logs', LogController.createLog); 

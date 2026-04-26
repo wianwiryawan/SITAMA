@@ -33,3 +33,20 @@ export const formatDateRange = (startStr: string, endStr: string) => {
   // 3. Jika tahunnya beda 
   return `${d1} ${months[m1]} ${y1} - ${d2} ${months[m2]} ${y2}`;
 };
+
+export const calculateDuration = (startDate: string, endDate: string): string => {
+  if (!startDate || !endDate) return "-";
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  start.setHours(12, 0, 0, 0);
+  end.setHours(12, 0, 0, 0);
+
+  const diffTime = end.getTime() - start.getTime();
+  
+  // Konversi ke hari dan tambah 1 (karena hari berangkat & pulang dihitung)
+  const finalDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+  return `${finalDays}`;
+};

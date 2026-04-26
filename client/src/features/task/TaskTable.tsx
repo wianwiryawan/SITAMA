@@ -1,16 +1,17 @@
+import { bgStyles } from "../../styles/theme";
 import type { ITask } from "../../types/task";
 
 export default function TaskTable({ tasks }: { tasks: ITask[] }) {
   return (
-     <section className="max-w-7xl mx-auto bg-gray-50/50 p-6 md:p-12 rounded-[3.5rem] border border-gray-50 shadow-inner">
+     <section className={`${bgStyles.backComponent} max-w-7xl mx-auto p-6 md:p-12 rounded-[3.5rem]`}>
 
           <div className="overflow-hidden bg-white rounded-4xl border border-gray-100 shadow-sm mb-10">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Nama Kegiatan</th>
-                  <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Pelaksana</th>
-                  <th className="p-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Progress</th>
+                <tr className="bg-[#fec77c] border-b border-gray-100">
+                  <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em]">Nama Kegiatan</th>
+                  <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em]">Pelaksana</th>
+                  <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em] text-right">Progress</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -19,7 +20,7 @@ export default function TaskTable({ tasks }: { tasks: ITask[] }) {
                     <td className="p-6 text-sm font-bold text-gray-900">{task.title}</td>
                     <td className="p-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-black uppercase border border-indigo-100">
+                        <div className="w-7 h-7 rounded-full bg-indigo-50 text-amber-600 flex items-center justify-center text-[10px] font-black uppercase border border-indigo-100">
                           {task.assignee[0]}
                         </div>
                         <span className="text-[11px] font-bold text-gray-600">{task.assignee}</span>

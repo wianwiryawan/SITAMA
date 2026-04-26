@@ -43,7 +43,7 @@ export default function DropdownAssignee({
         >
           <div className="flex flex-wrap gap-2 items-center flex-1">
             {selectedParticipantIds.length === 0 && customParticipants.length === 0 ? (
-              <span className="text-xs text-gray-400 font-bold ml-1">Pilih Pelaksana...</span>
+              <span className="text-sm text-gray-400 font-bold ml-1">Pilih Pelaksana...</span>
             ) : (
               <>
                 Daftar pelaksana
@@ -64,7 +64,7 @@ export default function DropdownAssignee({
               <input 
               autoFocus
               placeholder="Cari atau ketik nama luar..."
-              className="w-full bg-gray-50 p-4 rounded-2xl text-xs font-bold outline-none mb-4 focus:ring-2 ring-indigo-500/10"
+              className="w-full bg-gray-50 p-4 rounded-2xl text-sm font-bold outline-none mb-4 focus:ring-2 ring-indigo-500/10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
@@ -96,8 +96,8 @@ export default function DropdownAssignee({
                       className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all ${isSelected ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100 text-gray-500'}`}
                       >
                       <div className="flex flex-col">
-                          <span className="text-xs font-bold">{user.username}</span>
-                          <span className={`text-[8px] uppercase font-black ${isSelected ? 'text-indigo-200' : 'text-gray-400'}`}>{user.role}</span>
+                          <span className="text-sm font-bold">{user.username}</span>
+                          <span className={`text-[8px] uppercase font-black ${isSelected ? 'text-amber-200' : 'text-gray-400'}`}>{user.role}</span>
                       </div>
                       {isSelected && <span className="font-bold text-sm">✓</span>}
                       </div>

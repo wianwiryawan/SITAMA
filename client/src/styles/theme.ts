@@ -1,12 +1,18 @@
-export const mainStyles = {
-  container: "min-h-screen bg-gray-50 flex items-center justify-center p-6",
-  card: "w-full max-w-md bg-white rounded-[3rem] p-12 shadow-2xl border border-gray-100",
-  title: "text-4xl font-black tracking-tighter text-center text-gray-950",
-  input: "w-full bg-gray-50 p-5 rounded-2xl outline-none font-bold text-sm border focus:border-indigo-500 transition-all",
-  button: "w-full bg-gray-950 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-indigo-600 transition-all shadow-xl",
-  error: "text-[10px] font-black text-red-500 uppercase tracking-widest text-center",
-  footer: "text-center mt-8 text-[9px] font-bold text-gray-300 uppercase tracking-[0.2em]"
+export const bgStyles = {
+  login: "bg-[#fffcf5]",
+  app: "bg-gradient-to-b from-[#f1f0e5] via-[#f1f1e6] via-[#f6eada] to-[#faddb2]",
+  backComponent: "bg-[#fffcf5]",
 };
+
+export const dashboardStyles = {
+  eventCard: "bg-[#9dac7c]",
+  taskCard: "bg-[#829591]",
+  logCard: "bg-[#926f2b]",
+}
+
+export const textStyles = {
+  agendaList: " text-black text-sm font-black uppercase tracking-[0.2em]"
+}
 
 export const buttonStyles = {
   base: "w-full py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all",

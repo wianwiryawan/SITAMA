@@ -2,7 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
   // baseURL: 'http://localhost:5000/api',
-  baseURL: 'http://192.168.151.159:5000/api',
+  // baseURL: 'http://192.168.151.159:5000/api',
+  // eslint-disable-next-line no-constant-binary-expression
+  baseURL: `${window.location.protocol}//${window.location.hostname}:5000/api` || `${import.meta.env.VITE_API_URL}/api`,
   // baseURL: `${import.meta.env.VITE_API_URL}/api
 
 });

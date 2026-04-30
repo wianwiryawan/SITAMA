@@ -13,11 +13,11 @@ type KanbanManualProps = {
   closestCorners: any;
   currentUser: any;
   filterMode: "all" | "mine";
-  setSelectedTask: (task: any) => void;
+  onTaskClick: (task: any) => void;
   fetchTasks: () => void;
 };
 
-export default function KanbanManual({ closestCorners,currentUser, filterMode, setSelectedTask, fetchTasks,}: KanbanManualProps) {
+export default function KanbanManual({ closestCorners,currentUser, filterMode, onTaskClick, fetchTasks,}: KanbanManualProps) {
     // const [filterMode, setFilterMode] = useState<'all' | 'mine'>('all');
     const { tasks, setTasks } = useTasks();
     const role = currentUser.role;
@@ -87,7 +87,7 @@ export default function KanbanManual({ closestCorners,currentUser, filterMode, s
                     key={status} 
                     status={status} 
                     tasks={filteredTasks.filter(t => t.status === status)} 
-                    onTaskClick={setSelectedTask}
+                    onTaskClick={onTaskClick}
                 />
                 ))}
             </div>

@@ -11,7 +11,7 @@ export const LogController = {
       await db.insert(activityLogs).values({
         username: username, 
         action: action,
-        feature: feature, // 'TASK' atau 'CALENDAR'
+        feature: feature,
         targetName: targetName,
         timestamp: new Date(),
       });

@@ -5,7 +5,7 @@ export interface ITask {
   id: number;
   title: string;
   status: TaskStatus;
-  assignee: string;
+  assignee: number[];
   priority: Priority;
 }
 

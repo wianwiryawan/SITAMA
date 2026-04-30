@@ -46,7 +46,6 @@ export default function DropdownAssignee({
               <span className="text-sm text-gray-400 font-bold ml-1">Pilih Pelaksana...</span>
             ) : (
               <>
-                Daftar pelaksana
                 {allUsers.filter(u => selectedParticipantIds.includes(u.id)).map(user => (
                   <span key={user.id} className="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-[9px] font-black uppercase flex items-center gap-1">
                     {user.username}

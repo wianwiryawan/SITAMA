@@ -37,3 +37,10 @@ export const generateST = async (eventData: IEventData) => {
   });
   return response.data; 
 };
+
+export const generateSPT = async (eventData: IEventData) => {
+  const response = await api.post('/generate-spt', eventData, {
+    responseType: 'blob', 
+  });
+  return response.data; 
+};

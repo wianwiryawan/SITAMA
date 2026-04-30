@@ -14,6 +14,7 @@ interface EventModalProps {
   handleDelete: () => void;
   executeGenerateST: () => void;
   handleOpenGenerateST:(e: React.MouseEvent) => void;
+  handleGenerateSPT: () => void;
 
   // State untuk Pelaksana
   allUsers: any[];
@@ -63,6 +64,7 @@ export default function EventModal({
   isGenerating,
   executeGenerateST,
   handleOpenGenerateST,
+  handleGenerateSPT
 }: EventModalProps) {
   if (!isOpen) return null;
 
@@ -150,10 +152,23 @@ export default function EventModal({
           <button ref={formRef} type="submit" className="flex-1 py-5 bg-gray-950 text-white rounded-4xl font-black uppercase text-[11px] shadow-xl">Simpan Agenda</button>
           <button 
             type="button" 
-            onClick={handleOpenGenerateST}
+            onClick={(e) => {
+              if (formRef.current) {
+                const currentFormData = new FormData(formRef.current);
+                const eventType = currentFormData.get('type');
+
+                if (eventType === 'perdin') {
+                  handleGenerateSPT();
+                } else if (eventType === 'rapat') {
+                  handleOpenGenerateST(e as any);
+                } else {
+                  alert("Pilih jenis event (Perdin/Rapat) terlebih dahulu!");
+                }
+              }
+            }}
             className="flex-1 py-5 bg-indigo-800 text-white rounded-4xl font-black uppercase text-[11px] shadow-xl hover:bg-indigo-900 transition-all"
           >
-            Buat Surat Tugas
+            Buat Surat Tugas / SPT
           </button>
         </div>
       </form>

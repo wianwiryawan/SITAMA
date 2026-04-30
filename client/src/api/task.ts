@@ -1,10 +1,11 @@
 import api from './axios'; 
 
 export interface ITaskData {
+  id: number;
   title: string;
   status?: 'todo' | 'doing' | 'done'; 
   priority?: 'low' | 'medium' | 'high'; 
-  assigneeIds?: number[]; 
+  assignee: number[]; 
 }
 
 export const getAllTasks = async () => {

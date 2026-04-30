@@ -7,7 +7,7 @@ export const bgStyles = {
 export const dashboardStyles = {
   eventCard: "bg-[#9dac7c]",
   taskCard: "bg-[#829591]",
-  logCard: "bg-[#926f2b]",
+  logCard: "bg-[#c4963b]",
 }
 
 export const textStyles = {

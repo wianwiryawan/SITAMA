@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useMemo, useRef } from "react";
-import { getAllEvents, createEvent, updateEvent, deleteEvent } from "../../api/event";
+import { getAllEvents, createEvent, updateEvent, deleteEvent, generateSPT } from "../../api/event";
 import { getAllUsers } from "../../api/user";
 import api from "../../api/axios";
 
@@ -232,6 +232,7 @@ export function useCalendar(currentUser: any) {
     setIsPemberiModalOpen(true);
   };
 
+  // handle generate st (html to pdf)
   const handleGenerateST = async () => {
     if (!formRef.current || !selectedPemberiId) return;
     
@@ -285,6 +286,128 @@ export function useCalendar(currentUser: any) {
     }
   };
 
+  //handle generate ST (docx to docx)
+//   const handleGenerateST = async () => {
+//     if (!formRef.current || !selectedPemberiId) return;
+    
+//     const formData = new FormData(formRef.current);
+//     setIsGenerating(true);
+    
+//     try {
+//       const pelaksanaData = allUsers
+//         .filter(u => selectedParticipantIds.includes(u.id))
+//         .map(u => ({ 
+//           name: u.name,
+//           nip: u.nip,
+//           pangkat: u.pangkat,
+//           jabatan: u.jabatan,
+//           role: u.role,
+//         }));
+
+//       // customParticipants.forEach(name => {
+//       //   pelaksanaData.push({ name: name, nip: '-', pangkat: '-', role: 'Eksternal' } as any);
+//       // });
+
+//       const payload = {
+//         title: formData.get('title'),
+//         location: formData.get('location'),
+//         startDate: formData.get('startDate'),
+//         endDate: formData.get('endDate'),
+//         pelaksanaId: selectedParticipantIds,
+//         pelaksana: pelaksanaData,
+//         pemberiTugasId: Number(selectedPemberiId),
+//       };
+
+//       const response = await api.post('/generate-st', payload, {
+//         responseType: 'blob', // Tetap blob karena kita menerima file mentah
+//       });
+
+//       const blob = new Blob([response.data], { 
+//   type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+// });const url = window.URL.createObjectURL(blob);
+//       const link = document.createElement('a');
+//       link.href = url;
+
+//       // Pastikan nama file sudah sesuai (.docx)
+//       const safeTitle = String(payload.title)
+//   .replace(/[^\w\s-]/g, '')
+//   .replace(/\s+/g, '_');
+
+// const fileName = `ST_${safeTitle}.docx`;
+//       link.setAttribute('download', fileName);
+      
+//       // Prosedur standar download (tetap sama)
+//       document.body.appendChild(link);
+//       link.click();
+//       link.remove();
+//       window.URL.revokeObjectURL(url);
+
+//       setIsPemberiModalOpen(false); 
+//     } catch (error: any) {
+//   console.error("full error:", error);
+//   console.error("res error:", error?.response);
+//   console.error("data error:", error?.response?.data);
+  
+//   alert("Gagal membuat file Word. Cek console.");
+//     } finally {
+//       setIsGenerating(false); // Matikan loading state
+//     }
+//   };
+
+  const handleGenerateSPT = async () => {
+  if (!formRef.current) return;
+  
+  const formData = new FormData(formRef.current);
+  setIsGenerating(true);
+  
+  
+  try {
+    const pelaksanaData = allUsers
+        .filter(u => selectedParticipantIds.includes(u.id))
+        .map(u => ({ 
+          name: u.name,
+          nip: u.nip,
+          pangkat: u.pangkat,
+          role: u.role,
+        }));
+
+    const payload = {
+      title: formData.get('title'),
+      location: formData.get('location'),
+      startDate: formData.get('startDate'),
+      endDate: formData.get('endDate'),
+      pelaksanaId: selectedParticipantIds,
+      pelaksana: pelaksanaData,
+    };
+
+    const response = await api.post('/generate-spt', payload, {
+      responseType: 'blob', 
+    });
+
+    const url = window.URL.createObjectURL(response.data);
+
+    // const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    
+    link.setAttribute('download', `SPT_${String(payload.title)}.docx`);
+    
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    setIsModalOpen(false); 
+    console.log("handle generate spt berhasil");
+  } catch (error: any) {
+    console.error("Gagal Generate SPT:", error);
+    console.log("gagal",error);
+    alert("SPT Generator is coming soonnn!");
+  } finally {
+    setIsGenerating(false);
+  }
+};
+
   return {
     formRef,
     // Data & Logic
@@ -322,6 +445,6 @@ export function useCalendar(currentUser: any) {
     normalizeDate,
     handleGenerateST,
     handleOpenGenerateST,
-    
+    handleGenerateSPT,
   };
 }

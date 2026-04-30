@@ -10,6 +10,11 @@ dotenv.config();
 const app = express();
 
 // Middleware Global
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log("Body:", req.body);
+  next();
+});
 app.use(cors());
 app.use(express.json());
 

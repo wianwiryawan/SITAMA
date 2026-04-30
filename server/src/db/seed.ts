@@ -143,6 +143,24 @@ async function main() {
         role: 'staff' 
       },
       { 
+        username: 'Dendi',
+        name: 'Muhammad Dendi Pebriandi, S.Tr.IP',
+        nip: '19990202 202208 1 001',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Pengolah Data', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
+        username: 'Kairan',
+        name: 'Kairan Ketama Zakaria, S.Tr.I.P',
+        nip: '20010817 202409 1 001',
+        pangkat: 'Penata Muda (III/a)',
+        jabatan: 'Penata Layanan Operasional', 
+        password: hashedPassword, 
+        role: 'staff' 
+      },
+      { 
         username: 'Mas Ridwan',
         name: 'Ridwan Rasiman',
         jabatan: 'Tenaga IT Support', 

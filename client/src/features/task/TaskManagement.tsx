@@ -4,17 +4,18 @@ import { useTasks } from "./useTask";
 import { useTaskActions } from "./useTaskAction";
 import AddTaskModal from "./AddTaskModal";
 import TaskTable from "./TaskTable";
-import TaskLogs from "./TaskLog";
 import { closestCorners } from "@dnd-kit/core";
-import type { ITask } from "../../types/task";
+// import type { ITask } from "../../types/task";
 import KanbanManual from "./KanbanManual";
 import TaskDetailModal from "./TaskDetailModal";
+import type { ITaskData } from "../../api/task";
 
 export default function ToDoList({ currentUser }: any) {
   const { tasks, loading, fetchTasks } = useTasks();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [logs, setLogs] = useState([]);
-  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<ITaskData | null>(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterMode, setFilterMode] = useState<'all' | 'mine'>('all');
   
   const role = currentUser.role;
@@ -22,14 +23,24 @@ export default function ToDoList({ currentUser }: any) {
   const canSeeKanban = role === 'staff' || role === 'katim' || role === 'kasubdit' || role === 'tenagaahli';
   // const canSeeTable = role === 'katim' || role === 'kasubdit';
   const iskasubdit = role === 'kasubdit';
-
-  const {
-    handleAddTask,
-    handleDeleteTask,
-    handleUpdateTask,
-  } = useTaskActions(currentUser, fetchTasks, setLogs);
-
   
+  const {
+    allUsers,
+    selectedParticipantIds, setSelectedParticipantIds,
+    isDropdownOpen, setIsDropdownOpen,
+    searchTerm, setSearchTerm,
+    customParticipants, setCustomParticipants,
+  } = useTasks();
+  
+  const {
+    // handleAddTask,
+    handleDeleteTask,
+    // handleUpdateTask,
+    isModalOpen, setIsModalOpen,
+    setIsAddModalOpen, isAddModalOpen,
+    handleSaveTask
+  } = useTaskActions(currentUser, fetchTasks, setLogs, selectedParticipantIds);
+
 
   if (loading) return <div>Loading...</div>;
 
@@ -38,10 +49,16 @@ export default function ToDoList({ currentUser }: any) {
       {isAddModalOpen && (
         <AddTaskModal
           onClose={() => setIsAddModalOpen(false)}
-          onSubmit={(e: any) => {
-            e.preventDefault();
-            handleAddTask(new FormData(e.target), () => setIsAddModalOpen(false));
-          }}
+          onSubmit={handleSaveTask}
+        allUsers={allUsers}
+        selectedParticipantIds={selectedParticipantIds}
+        setSelectedParticipantIds={setSelectedParticipantIds}
+        customParticipants={customParticipants}
+        setCustomParticipants={setCustomParticipants}
+        isDropdownOpen={isDropdownOpen}
+        setIsDropdownOpen={setIsDropdownOpen}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
         />
       )}
 
@@ -76,25 +93,33 @@ export default function ToDoList({ currentUser }: any) {
           closestCorners={closestCorners} 
           currentUser={currentUser}
           filterMode={filterMode}
-          setSelectedTask={setSelectedTask}
+          onTaskClick={(e) => {
+            setSelectedTask(e);
+            setIsModalOpen(true);
+        }}
           fetchTasks={fetchTasks}
           />
       )}
 
-      {selectedTask && (
+      {isModalOpen && (
         <TaskDetailModal
           task={selectedTask}
-          onClose={() => setSelectedTask(null)}
+          onClose={() => setIsModalOpen(false)}
           onDelete={(id: number) => handleDeleteTask(id, () => setSelectedTask(null))}
-          onSubmit={(e: any) => {
-            e.preventDefault();
-            handleUpdateTask(selectedTask.id, new FormData(e.target), () => setSelectedTask(null));
-          }}
+          onSubmit={handleSaveTask}
+          allUsers={allUsers}
+          selectedParticipantIds={selectedParticipantIds}
+          setSelectedParticipantIds={setSelectedParticipantIds}
+          customParticipants={customParticipants}
+          setCustomParticipants={setCustomParticipants}
+          isDropdownOpen={isDropdownOpen}
+          setIsDropdownOpen={setIsDropdownOpen}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
       )}
 
       <TaskTable tasks={tasks} />
-      <TaskLogs logs={logs} />
     </div>
   );
 }

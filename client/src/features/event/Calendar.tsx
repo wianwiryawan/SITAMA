@@ -32,6 +32,7 @@ export default function Calendar({ currentUser }: { currentUser: any }) {
     setSelectedPemberiId, selectedPemberiId,
     setIsGenerating, isGenerating,
     handleGenerateST, handleOpenGenerateST,
+    handleGenerateSPT
   } = useCalendar(currentUser);
 
   if (loading) return <div className="p-10 text-center font-black italic">MEMUAT DATA AGENDA...</div>;
@@ -137,6 +138,7 @@ export default function Calendar({ currentUser }: { currentUser: any }) {
         setIsGenerating={setIsGenerating} 
         executeGenerateST={handleGenerateST}
         handleOpenGenerateST={handleOpenGenerateST}
+        handleGenerateSPT={handleGenerateSPT}
         />
 
       {/* Toast Notifikasi */}

@@ -9,6 +9,7 @@ import puppeteer from "puppeteer";
 import { calculateDuration, formatDateRange } from './utils';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import { Document, Packer, Paragraph } from 'docx';
 
 Handlebars.registerHelper("inc", (value: number) => {
   return (value || 0) + 1;
@@ -221,147 +222,173 @@ export const eventController = {
   }
   },
   
-  generateSPT: async (req: any, res: any) => {
-    try {
-      const { location, startDate, endDate, title, pelaksanaId } = req.body;
+  //generateST docx to docx
+  generateSTDocx: async (req: Request, res: Response) => {
 
-      if (!pelaksanaId || pelaksanaId.length === 0) {
-        return res.status(400).json({ message: "Data pelaksana tidak lengkap" });
-      }
+  try {
+    console.log("STEP 1: masuk endpoint");
+  const { location, startDate, endDate, title, pelaksanaId, pemberiTugasId } = req.body;
 
-      const daftarPelaksana = await db.select({
-          name: users.name,
-          nip: users.nip,
-          pangkat: users.pangkat,
-          jabatan: users.jabatan,
-          role: users.role 
-        })
-        .from(users)
-        .where(inArray(users.id, pelaksanaId));
+console.log("STEP 2: body done");
+  const [infoPemberi] = await db.select().from(users).where(eq(users.id, pemberiTugasId)).limit(1);
+  console.log("STEp 3: info pemberi done");
+  const daftarPelaksana = await db.select({
+    name: users.name, nip: users.nip, pangkat: users.pangkat, jabatan: users.jabatan
+  }).from(users).where(inArray(users.id, pelaksanaId));
+console.log("STEP 4: daftarPelaksana done");
+  const formattedDate = formatDateRange(startDate, endDate);
+console.log("STEP 5: formatdaterange done");
+  const templatePath = path.resolve("src/controllers/templateST.docx");
+  if (!fs.existsSync(templatePath)) throw new Error("Template .docx tidak ditemukan");
+console.log("STEP 6: buka template done");
+  const content = fs.readFileSync(templatePath, "binary");
+  const zip = new PizZip(content);
+  
+  try {
+  const doc = new Docxtemplater(zip, {
+  delimiters: {
+    start: "[[",
+    end: "]]",
+  },
+  paragraphLoop: true,
+  linebreaks: true,
+});
 
-      const formattedPegawai = daftarPelaksana.map((p, index) => {
-        const isASN = p.role !== 'tenagaahli';
-        return {
-          no: index + 1,
-          name: p.name || "-",
-          nip: isASN ? (p.nip || "-") : "",
-          pangkat: isASN ? (p.pangkat || "-") : "",
-          jabatan: p.jabatan || "-",
-          labelKepada: index === 0 ? 'Kepada' : '',
-          isASN: isASN 
-        };
-      });
+  const data = {
+  lokasi: location || "-",
+  tanggal: formattedDate,
+  agenda: title,
+  pegawai: daftarPelaksana.map((item, index) => ({
+    no: index + 1,
+    ...item
+  })),
+  namaPemberi: infoPemberi?.name || "-",
+  nipPemberi: infoPemberi?.nip || "-",
+  pangkatPemberi: infoPemberi?.pangkat || "-",
+  jabatanPemberi: infoPemberi?.jabatan || "-",
+};
 
-      const formattedDate = formatDateRange(startDate, endDate);
-      const durasiHari = calculateDuration(startDate, endDate);
+console.log("data untuk docx:");
+console.log(JSON.stringify(data, null, 2));
 
-      const templatePath = path.resolve(__dirname, './templateSPT.docx');
-      const content = fs.readFileSync(templatePath, 'binary');
-      
-      const zip = new PizZip(content);
-      const doc = new Docxtemplater(zip, {
-        paragraphLoop: true,
-        linebreaks: true,
-      });
+try {
+  doc.render(data);
+  console.log("RENDER BERHASIL");
+} catch (error: any) {
+  console.log("docx full error:");
+  console.log(JSON.stringify(error, null, 2));
 
-      doc.render({
-        lokasi: location || "-",
-        tanggal: formattedDate,
-        durasi: durasiHari,
-        agenda: title,
-        pegawai: formattedPegawai, 
-      });
+  return res.status(500).json({
+    message: "Template error",
+    error: error.message,
+  });
+}
 
-      const buf = doc.getZip().generate({ type: 'nodebuffer', compression: 'DEFLATE' });
-      
-      const safeFileName = `SPT_${title.substring(0, 20)}.docx`.replace(/[/\\?%*:|"<> ,]/g, '_');
+  // 4. Generate Buffer
+  const buf = doc.getZip().generate({
+    type: "nodebuffer",
+    compression: "DEFLATE",
+  });
 
-      res.set({
-        'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'Content-Disposition': `attachment; filename="${safeFileName}"`,
-        'Content-Length': buf.length
-      });
+  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  res.setHeader("Content-Disposition", `attachment; filename=ST_${title.replace(/\s+/g, '_')}.docx`);
+  
+  return res.send(buf);
 
-      return res.send(buf);
-
-    } catch (error) {
-      console.error("Error generate SPT:", error);
-      res.status(500).json({ message: "Gagal membuat dokumen SPT" });
-    }
+} catch (error: any) {
+  console.error("Detail Error:", error);
+  return res.status(500).json({ 
+    message: "Gagal generate ST", 
+    debug: error.message,
+    stack: error.stack 
+  })
+}
+} catch (error: any) {
+  console.log("DETAIL ERROR DOCX:");
+  console.log(JSON.stringify(error, null, 2));
+  throw error;
+}
   },
 
-  //generateST docx to docx
-//   generateST: async (req: Request, res: Response) => {
+    //generateST docx to docx
+  generateSPT: async (req: Request, res: Response) => {
 
-//   try {
-//     console.log("STEP 1: masuk endpoint");
-//   const { location, startDate, endDate, title, pelaksanaId, pemberiTugasId } = req.body;
-// console.log("STEP 2: body done");
-//   const [infoPemberi] = await db.select().from(users).where(eq(users.id, pemberiTugasId)).limit(1);
-//   console.log("STEp 3: info pemberi done");
-//   const daftarPelaksana = await db.select({
-//     name: users.name, nip: users.nip, pangkat: users.pangkat, jabatan: users.jabatan
-//   }).from(users).where(inArray(users.id, pelaksanaId));
-// console.log("STEP 4: daftarPelaksana done");
-//   const formattedDate = formatDateRange(startDate, endDate);
-// console.log("STEP 5: formatdaterange done");
-//   const templatePath = path.join(__dirname, "./templateST.docx");
-//   if (!fs.existsSync(templatePath)) throw new Error("Template .docx tidak ditemukan");
-// console.log("STEP 6: buka template done");
-//   const content = fs.readFileSync(templatePath, "binary");
-//   const zip = new PizZip(content);
+  try {
+    console.log("STEP 1: masuk endpoint");
+  const { location, startDate, endDate, title, pelaksanaId, pemberiTugasId } = req.body;
+
+console.log("STEP 2: body done");
+  const daftarPelaksana = await db.select({
+    name: users.name, nip: users.nip, pangkat: users.pangkat, jabatan: users.jabatan
+  }).from(users).where(inArray(users.id, pelaksanaId));
+console.log("STEP 4: daftarPelaksana done");
+  const formattedDate = formatDateRange(startDate, endDate);
+console.log("STEP 5: formatdaterange done");
+  const templatePath = path.resolve("src/controllers/templateSPT.docx");
+  if (!fs.existsSync(templatePath)) throw new Error("Template .docx tidak ditemukan");
+console.log("STEP 6: buka template done");
+  const content = fs.readFileSync(templatePath, "binary");
+  const zip = new PizZip(content);
   
-//   const doc = new Docxtemplater(zip, {
-//     paragraphLoop: true,
-//     linebreaks: true,
-//   });
-//   const data = {
-//   lokasi: location || "-",
-//   tanggal: formattedDate,
-//   agenda: title,
-//   pegawai: daftarPelaksana.map((item, index) => ({
-//     no: index + 1,
-//     ...item
-//   })),
-//   namaPemberi: infoPemberi?.name || "-",
-//   nipPemberi: infoPemberi?.nip || "-",
-//   pangkatPemberi: infoPemberi?.pangkat || "-",
-//   jabatanPemberi: infoPemberi?.jabatan || "-",
-// };
+  try {
+  const doc = new Docxtemplater(zip, {
+  delimiters: {
+    start: "[[",
+    end: "]]",
+  },
+  paragraphLoop: true,
+  linebreaks: true,
+});
 
-// console.log("data untuk docx:");
-// console.log(JSON.stringify(data, null, 2));
+  const data = {
+  lokasi: location || "-",
+  tanggal: formattedDate,
+  agenda: title,
+  pegawai: daftarPelaksana.map((item, index) => ({
+    no: index + 1,
+    ...item
+  })),
+};
 
-// try {
-//   doc.render(data);
-//   console.log("RENDER BERHASIL");
-// } catch (error: any) {
-//   console.log("docx full error:");
-//   console.log(JSON.stringify(error, null, 2));
+console.log("data untuk docx:");
+console.log(JSON.stringify(data, null, 2));
 
-//   return res.status(500).json({
-//     message: "Template error",
-//     error: error.message,
-//   });
-// }
-//   // 4. Generate Buffer
-//   const buf = doc.getZip().generate({
-//     type: "nodebuffer",
-//     compression: "DEFLATE",
-//   });
+try {
+  doc.render(data);
+  console.log("RENDER BERHASIL");
+} catch (error: any) {
+  console.log("docx full error:");
+  console.log(JSON.stringify(error, null, 2));
 
-//   res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-//   res.setHeader("Content-Disposition", `attachment; filename=ST_${title.replace(/\s+/g, '_')}.docx`);
+  return res.status(500).json({
+    message: "Template error",
+    error: error.message,
+  });
+}
+
+  // 4. Generate Buffer
+  const buf = doc.getZip().generate({
+    type: "nodebuffer",
+    compression: "DEFLATE",
+  });
+
+  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  res.setHeader("Content-Disposition", `attachment; filename=ST_${title.replace(/\s+/g, '_')}.docx`);
   
-//   return res.send(buf);
+  return res.send(buf);
 
-// } catch (error: any) {
-//   console.error("Detail Error:", error);
-//   return res.status(500).json({ 
-//     message: "Gagal generate ST", 
-//     debug: error.message,
-//     stack: error.stack 
-//   })
-// }
-//   }
+} catch (error: any) {
+  console.error("Detail Error:", error);
+  return res.status(500).json({ 
+    message: "Gagal generate ST", 
+    debug: error.message,
+    stack: error.stack 
+  })
+}
+} catch (error: any) {
+  console.log("DETAIL ERROR DOCX:");
+  console.log(JSON.stringify(error, null, 2));
+  throw error;
+}
+  }
 };

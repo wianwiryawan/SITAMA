@@ -11,6 +11,7 @@ export default function TaskTable({ tasks }: { tasks: ITask[] }) {
                 <tr className="bg-[#fec77c] border-b border-gray-100">
                   <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em]">Nama Kegiatan</th>
                   <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em]">Pelaksana</th>
+                  <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em]">Keterangan</th>
                   <th className="p-6 text-[10px] font-black text-black uppercase tracking-[0.2em] text-right">Progress</th>
                 </tr>
               </thead>
@@ -26,6 +27,7 @@ export default function TaskTable({ tasks }: { tasks: ITask[] }) {
                         <span className="text-[11px] font-bold text-gray-600">{task.assignee}</span>
                       </div>
                     </td>
+                    <td className="p-6 text-sm font-bold text-gray-900">{task.note}</td>
                     <td className="p-6 text-right">
                       <span className={`text-[9px] px-4 py-1.5 rounded-full font-black uppercase tracking-tighter border ${
                         task.status === 'done' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 

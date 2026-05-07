@@ -37,6 +37,7 @@ export const tasks = pgTable('tasks', {
   priority: priorityEnum('priority').default('medium'),
   createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt').defaultNow(),
+  note: text('note')
 });
 
 export const taskAssignments = pgTable('task_assignments', {

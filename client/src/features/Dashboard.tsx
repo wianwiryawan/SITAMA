@@ -5,6 +5,7 @@ import { useCalendar } from "../features/event/useCalendar";
 import ActivityLog, { type ILog } from "./log/ActivityLog";
 import AgendaList from "./event/AgendaList";
 import { bgStyles, dashboardStyles } from "../styles/theme";
+import { useTasks } from "./task/useTask";
 
 export default function Dashboard({ user }: { user: any }) {
 const {
@@ -16,6 +17,10 @@ const {
     isTodayEvent,
     isNextEvent,
   } = useCalendar(user);
+
+  const {
+    taskStats
+  } = useTasks();
 
   const [logs, setLogs] = useState<ILog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,28 +82,28 @@ const {
                 <p className="text-[10px] font-black uppercase opacity-60 tracking-widest">
                   Tugas Berjalan
                 </p>
-                <p className="text-5xl font-black mt-4 text-white">08</p>
+                <p className="text-5xl font-black mt-4 text-white">{taskStats.doing}</p>
               </div>
 
             <div className={`${dashboardStyles.taskCard} rounded-[2.5rem] p-8 text-white`}>
               <p className="text-[10px] font-black uppercase opacity-60 tracking-widest">
                 Tugas Selesai
               </p>
-              <p className="text-5xl font-black mt-4 text-white">05</p>
+              <p className="text-5xl font-black mt-4 text-white">{taskStats.completed}</p>
             </div>
 
             <div className={`${dashboardStyles.taskCard} rounded-[2.5rem] p-8 text-white`}>
               <p className="text-[10px] font-black uppercase opacity-60 tracking-widest">
                 Tugas Pending
               </p>
-              <p className="text-5xl font-black mt-4 text-white">02</p>
+              <p className="text-5xl font-black mt-4 text-white">{taskStats.todo}</p>
             </div>
 
               <div className={`${dashboardStyles.taskCard} rounded-[2.5rem] p-8 text-white`}>
                 <p className="text-[10px] font-black uppercase opacity-60 tracking-widest">
                   Total Tugas
                 </p>
-                <p className="text-5xl font-black mt-4 text-white">15</p>
+                <p className="text-5xl font-black mt-4 text-white">{taskStats.total}</p>
               </div>
             </div>
         </div>
@@ -117,7 +122,3 @@ const {
     </div>
   );
 }
-
-// function useState<T>(arg0: never[]): [any, any] {
-//   throw new Error("Function not implemented.");
-// }

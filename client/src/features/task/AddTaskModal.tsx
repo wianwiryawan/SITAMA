@@ -48,6 +48,7 @@ export default function AddTaskModal({
             searchTerm={searchTerm} 
             setSearchTerm={setSearchTerm}
           />
+          <input name="note" required placeholder="Keterangan" className="w-full bg-gray-50 rounded-2xl p-4 font-bold outline-none focus:ring-2 ring-indigo-500/20 border-none" />
           <select name="priority" className="w-full bg-gray-50 rounded-2xl p-4 font-bold outline-none border-none appearance-none">
             <option value="low">Priority: Low</option>
             <option value="medium">Priority: Medium</option>

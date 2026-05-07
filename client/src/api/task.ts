@@ -6,6 +6,7 @@ export interface ITaskData {
   status?: 'todo' | 'doing' | 'done'; 
   priority?: 'low' | 'medium' | 'high'; 
   assignee: number[]; 
+  note: string;
 }
 
 export const getAllTasks = async () => {

@@ -72,6 +72,31 @@ export default function KanbanManual({ closestCorners,currentUser, filterMode, o
         }
       }
     };
+
+//   const handleDragOver = (event: DragOverEvent) => {
+//   const { active, over } = event;
+//   if (!over || iskasubdit) return; 
+
+//   const activeId = active.id;
+//   const overId = over.id;
+
+//   let newStatus: TaskStatus | null = null;
+//   if (['todo', 'doing', 'done'].includes(overId as string)) {
+//     newStatus = overId as TaskStatus;
+//   } else {
+//     const overTask = tasks.find(t => t.id === overId);
+//     if (overTask) newStatus = overTask.status;
+//   }
+
+//   if (newStatus) {
+//     const activeTask = tasks.find(t => t.id === activeId);
+//     if (activeTask && activeTask.status !== newStatus) {
+//       setTasks(prev => prev.map(t => 
+//         t.id === activeId ? { ...t, status: newStatus as TaskStatus } : t
+//       ));
+//     }
+//   }
+// };
   
   return (
     <main className="max-w-7xl mx-auto mb-24">

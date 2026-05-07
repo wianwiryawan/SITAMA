@@ -11,4 +11,5 @@ export interface Task {
   status: 'todo' | 'doing' | 'done';
   assignee_username: string;
   priority: 'low' | 'medium' | 'high';
+  note: string;
 }

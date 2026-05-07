@@ -7,6 +7,7 @@ export interface ITask {
   status: TaskStatus;
   assignee: number[];
   priority: Priority;
+  note: string;
 }
 
 export interface ILog {

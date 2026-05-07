@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from './axios'; 
 
 export interface IEventData {
@@ -9,6 +10,16 @@ export interface IEventData {
   location: string;
   type: 'rapat' | 'perdin';
   participants: number[];
+}
+
+export interface IEventData_docx {
+  title: any;
+  location: any;
+  startDate: any;
+  endDate: any;
+  pelaksanaId: any;
+  pelaksana: any;
+  pemberiTugasId: any;
 }
 
 export const getAllEvents = async () => {
@@ -33,6 +44,13 @@ export const deleteEvent = async (id: number) => {
 
 export const generateST = async (eventData: IEventData) => {
   const response = await api.post('/generate-st', eventData, {
+    responseType: 'blob', 
+  });
+  return response.data; 
+};
+
+export const generateSTDocx = async (eventData: IEventData_docx) => {
+  const response = await api.post('/generate-st-docx', eventData, {
     responseType: 'blob', 
   });
   return response.data; 

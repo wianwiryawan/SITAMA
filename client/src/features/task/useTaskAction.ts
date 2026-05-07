@@ -77,6 +77,7 @@ console.log("ketutup gaa",isModalOpen);
       priority: (formData.get("priority") as any) || "medium",
       assigneeIds: selectedParticipantIds, 
       status: selectedTask?.status || "todo",
+      note: formData.get("note") as string
     };
 
     // Validasi

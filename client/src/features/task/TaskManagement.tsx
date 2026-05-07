@@ -42,7 +42,7 @@ export default function ToDoList({ currentUser }: any) {
   } = useTaskActions(currentUser, fetchTasks, setLogs, selectedParticipantIds);
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-10 text-center font-black italic">MEMUAT DATA TUGAS...</div>;
 
   return (
     <div className="min-h-screen bg-[#fffcf5] text-[#521f12] p-6 md:p-14 antialiased selection:bg-indigo-100 rounded-[2.5rem]">

@@ -6,12 +6,13 @@ import { eq } from 'drizzle-orm';
 export const taskController = {
   createTask: async (req: Request, res: Response) => {
     try {
-      const { title, status, priority, assigneeIds } = req.body;
+      const { title, status, priority, assigneeIds, note } = req.body;
 
       const [newTask] = await db.insert(tasks).values({
         title,
         status,
         priority,
+        note
       }).returning();
 
       // Jika ada assignees insert ke task_assignments
@@ -53,10 +54,10 @@ export const taskController = {
   updateTask: async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { title, status, priority, assigneeIds } = req.body;
+      const { title, status, priority, assigneeIds, note } = req.body;
 
       await db.update(tasks)
-        .set({ title, status, priority, updatedAt: new Date() })
+        .set({ title, status, priority, updatedAt: new Date(), note })
         .where(eq(tasks.id, Number(id)));
 
       // Update Assignees (hapus lama, insert baru)

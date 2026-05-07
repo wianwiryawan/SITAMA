@@ -52,6 +52,8 @@ export default function TaskDetailModal({
             searchTerm={searchTerm} 
             setSearchTerm={setSearchTerm}
           />
+          <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Keterangan</label>
+          <input name="note" defaultValue={task.note} required className="w-full bg-gray-50 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 border-none" />
           <label className="text-sm font-bold text-gray-400 uppercase tracking-widest">Prioritas</label>
           <select name="priority" defaultValue={task.priority} className="w-full bg-gray-50 rounded-2xl p-4 outline-none border-none">
             <option value="low">Low</option>
